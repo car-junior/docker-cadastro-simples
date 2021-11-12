@@ -1,0 +1,36 @@
+#VERSÃO DOCKER-COMPOSE
+version: '3'
+services: 
+  #SERVICO DO BANCO DE DADOS REFERENCIADO AO BACKEND
+  db:
+    image: mongo:3.4
+  
+  #SERVICOS DO BACK-END
+  backend:
+    #INSTALANDO IMAGEM NO NODE
+    image: node:8.1
+
+    #MAPEANDO O VOLUME BACK DA MAQUINA HOST PARA O CONTAINER
+    volumes:
+      - ./backend:/backend
+    
+    #EXPONDO A PORTA 3000 DO CONTAINER PARA O HOST / MAPEAMENTO DE PORTAS
+    ports:
+      - 3000:3000
+    
+    #INDICANDO QUE AO INICIAR A IMAGEM DEVE ENTRAR NA PASTA BACKEND INSTALAR DEPENDENCIAS E EXECUTAR O ARQUIVO app.js
+    command: bash -c "cd /backend && npm i && node app"
+
+  #SERVICOS DO FRONT END
+  frontend:
+    #INSTALANDO IMAGEM DO NGINX
+    image: nginx:1.13
+
+    #MAPEANDO O VOLUME BACK DA MAQUINA HOST PARA O CONTAINER
+    volumes:
+      - ./frontend:/usr/share/nginx/html/
+    
+    #EXPONDO A PORTA 80 DO CONTAINER FRONT PARA O HOST
+    ports:
+      - 80:80
+
